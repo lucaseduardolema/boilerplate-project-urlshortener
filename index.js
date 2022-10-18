@@ -1,24 +1,33 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
+require("dotenv").config();
+const boryParser = require("body-parser");
+const express = require("express");
+const cors = require("cors");
+const apiShortUrlRouter = require('./routes/apiShortUrlRouter')
+
 const app = express();
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
 
+app.use(express.json());
+app.use(boryParser.urlencoded({ extended: true }));
+
 app.use(cors());
 
-app.use('/public', express.static(`${process.cwd()}/public`));
+app.use("/public", express.static(`${process.cwd()}/public`));
 
-app.get('/', function(req, res) {
-  res.sendFile(process.cwd() + '/views/index.html');
+app.get("/", function (_req, res) {
+  res.sendFile(process.cwd() + "/views/index.html");
 });
 
-// Your first API endpoint
-app.get('/api/hello', function(req, res) {
-  res.json({ greeting: 'hello API' });
-});
+app.use('/api/shorturl', apiShortUrlRouter)
 
-app.listen(port, function() {
+app.use((error, _req, res, _next) => {
+  if (error) {
+    res.status(error.status || 500).json(error.message || "SERVER ERROR")
+  }
+})
+
+app.listen(port, function () {
   console.log(`Listening on port ${port}`);
 });
