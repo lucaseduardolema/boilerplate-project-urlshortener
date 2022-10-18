@@ -11,9 +11,9 @@ router.get("/:short", (req, res) => {
 
   findByShortUrl(shortUrl, (error, data) => {
     // if (error) return res.status(404).json(error);
-
-    const { original_url } = data[0];
-    res.redirect(original_url);
+    
+    if (!data[0]?.original_url) return res.status(404).json({ error: "Short url not found"})
+    res.redirect(data[0].original_url);
   });
 });
 

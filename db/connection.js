@@ -30,8 +30,6 @@ const createAndSaveUrl = (originalUrl, shortUrl, done) => {
 };
 
 const findByShortUrl = (shortUrl, done) => {
-  console.log(typeof shortUrl);
-
   Url.find({ short_url: shortUrl }, (error, data) => {
     // if (error) console.log(error);
 
